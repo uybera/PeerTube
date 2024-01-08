@@ -11,6 +11,10 @@
       <video #playerElement class="video-js vjs-peertube-skin" playsinline="true"></video>
     </div>
 
+    <!-- Janus -->
+    <div id="videos"></div>
+    <!-- Fin Janus -->
+
     <my-video-watch-playlist
       #videoWatchPlaylist [playlist]="playlist"
       (noVideoFound)="onPlaylistNoVideoFound()" (videoFound)="onPlaylistVideoFound($event)"
@@ -18,6 +22,62 @@
 
     <my-plugin-placeholder pluginId="player-next"></my-plugin-placeholder>
   </div>
+
+  <!-- Janus -->
+  <div id="video-wrapper-janus">
+    <div class="container">
+      
+      <div class="row">
+        <div class="col-md-12">
+          <div class="pb-2 mt-4 mb-2 border-bottom">
+            <h2>Janus : Streaming
+              <button class="btn btn-secondary" autocomplete="off" id="start">Start</button>
+            </h2>
+          </div>
+          <div class="container mt-5" id="details">
+          </div>
+          <div class="container mt-4 hide" id="streams">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card w-100">
+                  <div class="card-header">
+                    <span class="card-title">Streams <i id="update-streams" class="fa-solid fa-rotate" title="Update list of streams" style="cursor: pointer;"></i></span>
+                  </div>
+                  <div class="card-body" id="list">
+                    <div class="btn-group btn-group-sm">
+                      <button class="btn btn-primary" autocomplete="off" id="watch">Watch</button>
+                      <div class="btn-group btn-group-sm">
+                        <button autocomplete="off" id="streamset" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                          Streams list
+                        </button>
+                        <ul id="streamslist" class="dropdown-menu" role="menu" style="max-height: 300px; overflow: auto;">
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card mt-4 w-100 hide" id="info">
+                  <div class="card-header">
+                    <span class="card-title"><i class="fa-solid fa-circle-info"></i> Metadata</span>
+                  </div>
+                  <div class="card-body">
+                    <pre id="metadata" class="card card-body bg-gray mt-3"></pre>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="col-md-6" id="videos"> </div> -->
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <hr>
+      <div class="footer">
+      </div>
+    </div>
+  </div>
+  <!-- Fin janus -->
 
   <my-video-alert [video]="video" [user]="user" [noPlaylistVideoFound]="noPlaylistVideoFound"></my-video-alert>
 

@@ -52,6 +52,9 @@ import { cleanupVideoWatch, getStoredTheater, getStoredVideoWatchHistory } from 
 import { environment } from '../../../environments/environment'
 import { VideoWatchPlaylistComponent } from './shared'
 
+import * as janusJanus from "../../../../janus/janus.js"
+import * as janusStreamingTest from "../../../../janus/streamingtest.js"
+
 type URLOptions = {
   playerMode: PlayerMode
 
@@ -168,6 +171,10 @@ export class VideoWatchComponent implements OnInit, OnDestroy {
     )
 
     this.peertubePlayer = new PeerTubePlayer(constructorOptions)
+
+    // JANUS
+    janusJanus.Janus()
+    janusStreamingTest.onReady()
   }
 
   ngOnDestroy () {

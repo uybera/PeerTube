@@ -3,6 +3,7 @@ import { createServer, Server } from 'net'
 import context from 'node-media-server/src/node_core_ctx.js'
 import nodeMediaServerLogger from 'node-media-server/src/node_core_logger.js'
 import NodeRtmpSession from 'node-media-server/src/node_rtmp_session.js'
+import NodeRelaySession from 'node-media-server/src/node_relay_session.js'
 import { join } from 'path'
 import { createServer as createServerTLS, Server as ServerTLS } from 'tls'
 import { pick, wait } from '@peertube/peertube-core-utils'
@@ -63,6 +64,8 @@ class LiveManager {
 
   private running = false
 
+  private relaySession : NodeRelaySession
+
   private constructor () {
   }
 
@@ -80,6 +83,11 @@ class LiveManager {
       const session = this.getContext().sessions.get(sessionId)
       const inputLocalUrl = session.inputOriginLocalUrl + streamPath
       const inputPublicUrl = session.inputOriginPublicUrl + streamPath
+
+      //JANUS
+      this.relaySession = new NodeRelaySession({'inPath':inputLocalUrl, 'ffmpeg':'/usr/bin/ffmpeg', 'gstreamer':'/usr/bin/gst-launch-1.0'})
+      this.relaySession.runRelayToJanus()
+      //ENDJANUS
 
       this.handleSession({ sessionId, inputPublicUrl, inputLocalUrl, streamKey: splittedPath[2] })
         .catch(err => logger.error('Cannot handle sessions.', { err, ...lTags(sessionId) }))
@@ -177,6 +185,9 @@ class LiveManager {
         session.stop()
       }
     })
+
+    if(this.relaySession)
+      this.relaySession.end()
   }
 
   isRunning () {
@@ -226,6 +237,9 @@ class LiveManager {
       muxingSession.abort()
 
       this.muxingSessions.delete(sessionId)
+
+      if(this.relaySession)
+        this.relaySession.end()
     }
   }
 
